@@ -13,4 +13,4 @@ git fetch --all
 git merge origin/master
 git add .
 git commit -m "Update Data"
-git push https://$GH_TOKEN@github.com/osg-htc/ospool-data.git
+git push https://CannonLock:$GH_TOKEN@github.com/osg-htc/ospool-data.git
