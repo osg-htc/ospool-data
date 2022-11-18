@@ -7,7 +7,7 @@ set -a
 set +a
 
 source venv/bin/activate
-pip3 install -r requirements.txt > /dev/null
+pip3 install -r requirements.txt > /dev/null 2>&1
 
 python create_daily_ospool_report_json.py
 
