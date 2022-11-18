@@ -48,6 +48,7 @@ def write_document_to_file(document: dict, latest: bool = False, overwrite: bool
         with open(output_path, "w") as fp:
             json.dump(document["_source"], fp)
 
+
 if __name__ == "__main__":
 
     documents = get_daily_reports(9999)
