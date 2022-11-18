@@ -9,8 +9,18 @@ pip3 install -r requirements.txt
 
 python create_daily_ospool_report_json.py
 
-git fetch --all
-git merge origin/master
-git add .
-git commit -m "Update Data"
-git push https://CannonLock:$GH_TOKEN@github.com/osg-htc/ospool-data.git
+# Check that data was added since the last run
+git diff-index --quiet HEAD
+returnValue=$?
+
+# If new data was added then push it
+if [ $returnValue -ne 0 ]
+then
+  git fetch --all
+  git merge origin/master
+  git add .
+  git commit -m "Update Data"
+  git push https://CannonLock:$GH_TOKEN@github.com/osg-htc/ospool-data.git
+fi
+
+
