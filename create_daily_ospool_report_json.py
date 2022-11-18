@@ -3,6 +3,7 @@
 import requests
 import json
 import os
+from verification import verify_latest_report
 
 DATA_DIRECTORY = "data/daily_reports"
 SUMMARY_INDEX = "daily_totals"
@@ -11,28 +12,19 @@ ENDPOINT = "http://localhost:9200"
 
 def get_daily_reports(size):
     """Get OSPool daily reports from elastic search ordered by date"""
+
     query = {
         "size": size,
         "query": {
             "bool": {
                 "filter": [
-                    {
-                        "term": {
-                            "query": "OSG-schedd-job-history"
-                        }
-                    },
-                    {
-                        "term": {
-                            "report_period": "daily"
-                        }
-                    },
+                    {"term": {"query": "OSG-schedd-job-history"}},
+                    {"term": {"report_period": "daily"}},
                 ]
             }
         },
         "sort": [
-            {
-                "date": "desc"
-            }
+            {"date": "desc"}
         ]
     }
 
@@ -48,18 +40,28 @@ def get_daily_reports(size):
     return documents
 
 
-documents = get_daily_reports(9999)
+def write_document_to_file(document: dict, latest: bool = False, overwrite: bool = False):
 
-# Write the most recent file to latest
-with open(f"{DATA_DIRECTORY}/latest.json", "w") as fp:
-    json.dump(documents[0]["_source"], fp)
+    output_path = f"{DATA_DIRECTORY}/{document['_source']['date']}.json" if latest else f"{DATA_DIRECTORY}/latest.json"
 
-# Write the rest to a dated file
-for document in documents:
-    json_output_path = f"{DATA_DIRECTORY}/{document['_source']['date']}.json"
-
-    # No need to write to an existing file
-    if not os.path.isfile(json_output_path):
-
-        with open(json_output_path, "w") as fp:
+    if overwrite and not os.path.isfile(output_path):
+        with open(output_path, "w") as fp:
             json.dump(document["_source"], fp)
+
+if __name__ == "__main__":
+
+    documents = get_daily_reports(9999)
+
+    for document in documents:
+        write_document_to_file(document)
+
+    outliers_we_care_about = {"all_cpu_hours", "num_uniq_job_ids", "num_projects", "num_users", "total_files_xferd"}
+    if verify_latest_report(outliers_we_care_about):
+
+        latest_document = documents[0]
+        write_document_to_file(latest_document, True, True)
+
+    else:
+
+        print("Found some outliers, check latest report.")
+        exit(1)
