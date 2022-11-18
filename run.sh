@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cd /home/clock/ospool-data
+
 set -a
 . ./secrets/gh_token
 set +a
