@@ -18,11 +18,9 @@ returnValue=$?
 # If new data was added then push it
 if [ $returnValue -ne 0 ]
 then
-  git fetch --all &> /dev/null
-  git merge origin/master &> /dev/null
-  git add . &> /dev/null
-  git commit -m "Update Data" &> /dev/null
+  git fetch --all
+  git merge origin/master
+  git add .
+  git commit -m "Update Data"
   git push https://CannonLock:$GH_TOKEN@github.com/osg-htc/ospool-data.git &> /dev/null
 fi
-
-
