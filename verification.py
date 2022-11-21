@@ -54,4 +54,11 @@ def verify_latest_report(invalid_outliers: set):
 
 if __name__ == "__main__":
 
-    print(verify_latest_report({"all_cpu_hours", "num_uniq_job_ids", "num_projects", "num_users", "total_files_xferd"}))
+    from create_daily_ospool_report_json import OUTLIERS_WE_CARE_ABOUT, write_document_to_file
+
+    if verify_latest_report(OUTLIERS_WE_CARE_ABOUT):
+
+        with open(sorted(glob.glob("data/daily_reports/2*.json"))[-1], "r") as fp:
+
+            latest_document = json.load(fp)
+            write_document_to_file(latest_document, True, True)
