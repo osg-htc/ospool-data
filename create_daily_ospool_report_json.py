@@ -64,4 +64,5 @@ if __name__ == "__main__":
     else:
 
         print("Found some outliers, check latest report.")
+	print(documents[0]["_source"]["date"])
         exit(1)
