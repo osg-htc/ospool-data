@@ -59,8 +59,3 @@ if __name__ == "__main__":
     latest_document = documents[0]
     write_document_to_file(latest_document["_source"], True, True)
 
-    else:
-
-        print("Found some outliers, check latest report.")
-        print(documents[0]["_source"]["date"])
-        exit(1)
