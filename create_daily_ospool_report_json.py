@@ -56,10 +56,8 @@ if __name__ == "__main__":
     for document in documents:
         write_document_to_file(document["_source"])
 
-    if verify_latest_report(OUTLIERS_WE_CARE_ABOUT):
-
-        latest_document = documents[0]
-        write_document_to_file(latest_document["_source"], True, True)
+    latest_document = documents[0]
+    write_document_to_file(latest_document["_source"], True, True)
 
     else:
 
