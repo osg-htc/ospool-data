@@ -16,6 +16,25 @@ def get_daily_active_facilities_report():
 
     query = {
         "size": 0,
+        "query" : {
+            "bool": {
+                "filter": [
+                    {
+                        "term": {
+                           "ResourceType": "Payload"
+                        }
+                    },
+                    {
+                        "range": {
+                           "EndTime": {
+                              "lte": int(datetime.datetime.now().timestamp() * 1000),
+                              "gte": int((datetime.datetime.now() - datetime.timedelta(days=365)).timestamp() * 1000)
+                           }
+                        }
+                    },
+                ]
+            }
+        },
         "aggs": {
             "Sites": {
                 "terms": {
