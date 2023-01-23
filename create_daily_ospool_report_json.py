@@ -9,6 +9,14 @@ DATA_DIRECTORY = "data/daily_reports"
 SUMMARY_INDEX = "daily_totals"
 ENDPOINT = "http://localhost:9200"
 OUTLIERS_WE_CARE_ABOUT = {"all_cpu_hours", "num_uniq_job_ids", "num_projects", "num_users", "total_files_xferd"}
+EXPECTED_KEYS = [
+    "num_uniq_job_ids",
+    "total_files_xferd",
+    "all_cpu_hours",
+    "num_users",
+    "num_uniq_job_ids",
+    "num_institutions"
+]
 
 def get_daily_reports(size):
     """Get OSPool daily reports from elastic search ordered by date"""
@@ -56,6 +64,14 @@ if __name__ == "__main__":
     for document in documents:
         write_document_to_file(document["_source"])
 
-    latest_document = documents[0]
-    write_document_to_file(latest_document["_source"], True, True)
+    if verify_latest_report(OUTLIERS_WE_CARE_ABOUT, EXPECTED_KEYS):
+
+        latest_document = documents[0]
+        write_document_to_file(latest_document["_source"], True, True)
+
+    else:
+
+        print("Found some outliers or missing keys, check latest report.")
+        print(documents[0]["_source"]["date"])
+        exit(1)
 

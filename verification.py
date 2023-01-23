@@ -39,13 +39,16 @@ def check_document_for_outliers(df: pd.DataFrame, document: pd.DataFrame) -> lis
     return outlier
 
 
-def verify_latest_report(invalid_outliers: set):
+def verify_latest_report(invalid_outliers: set, expected_keys: list):
     """True if the latest report does not contain outliers we care about"""
 
     daily_report_df = get_daily_reports()
 
     past_reports_df = daily_report_df.iloc[1:, :]
     latest_report_df = daily_report_df.iloc[0:1, :]
+
+    if not all(key in latest_report_df.columns for key in expected_keys):
+        return False
 
     outliers = set(check_document_for_outliers(past_reports_df, latest_report_df))
 
@@ -54,9 +57,9 @@ def verify_latest_report(invalid_outliers: set):
 
 if __name__ == "__main__":
 
-    from create_daily_ospool_report_json import OUTLIERS_WE_CARE_ABOUT, write_document_to_file
+    from create_daily_ospool_report_json import OUTLIERS_WE_CARE_ABOUT, EXPECTED_KEYS, write_document_to_file
 
-    if verify_latest_report(OUTLIERS_WE_CARE_ABOUT):
+    if verify_latest_report(OUTLIERS_WE_CARE_ABOUT, EXPECTED_KEYS):
 
         with open(sorted(glob.glob("data/daily_reports/2*.json"))[-1], "r") as fp:
 
