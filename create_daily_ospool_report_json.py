@@ -10,7 +10,7 @@ SUMMARY_INDEX = "daily_totals"
 ENDPOINT = "http://localhost:9200"
 OUTLIERS_WE_CARE_ABOUT = {"all_cpu_hours", "num_uniq_job_ids", "num_projects", "num_users", "total_files_xferd"}
 EXPECTED_KEYS = [
-    "um_uniq_job_ids",
+    "num_uniq_job_ids",
     "total_files_xferd",
     "all_cpu_hours",
     "num_users",
