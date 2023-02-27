@@ -27,8 +27,8 @@ def get_daily_active_facilities_report():
                     {
                         "range": {
                            "EndTime": {
-                              "lte": int(datetime.datetime.now().timestamp() * 1000),
-                              "gte": int((datetime.datetime.now() - datetime.timedelta(days=365)).timestamp() * 1000)
+                              "lte": int(datetime.datetime.now().timestamp()),
+                              "gte": int((datetime.datetime.now() - datetime.timedelta(days=365)).timestamp())
                            }
                         }
                     },
