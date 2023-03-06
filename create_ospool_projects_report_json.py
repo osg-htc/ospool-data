@@ -64,12 +64,12 @@ def get_ospool_resources_report_json():
         headers={'Content-Type': 'application/json'}
     )
     response_json = response.json()
-    project_names = [i['key'] for i in response_json['aggregations']['resources']['buckets']]
+    project_names = [i['key'] for i in response_json['aggregations']['projects']['buckets']]
 
     return project_names
 
 
 if __name__ == "__main__":
 
-    active_ospool_resources = get_ospool_resources_report_json()
-    write_document_to_file(active_ospool_resources, DATA_DIRECTORY, f"ospool_projects.json", True)
+    ospool_projects = get_ospool_resources_report_json()
+    write_document_to_file(ospool_projects, DATA_DIRECTORY, f"ospool_projects.json", True)

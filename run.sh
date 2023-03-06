@@ -11,6 +11,7 @@ pip3 install -r requirements.txt &> /dev/null 2>&1
 
 python3 create_daily_ospool_report_json.py
 python3 create_active_facilities_report_json.py
+python3 create_ospool_projects_report_json.py
 
 # Check that data was added since the last run
 git diff-index --quiet HEAD
