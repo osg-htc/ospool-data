@@ -33,11 +33,6 @@ def get_ospool_resources_report_json():
                         }
                     },
                     {
-                        "term": {
-                            "JobStatus": 4,
-                        }
-                    },
-                    {
                         "terms": {
                             "ScheddName.keyword": [
                                 "login04.osgconnect.net",
