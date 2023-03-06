@@ -81,3 +81,5 @@ if __name__ == "__main__":
 
     if verify_ospool_projects(ospool_projects):
         write_document_to_file(ospool_projects, DATA_DIRECTORY, f"ospool_projects.json", True)
+    else:
+        print("New Projects are not a superset of the previous projects!")
