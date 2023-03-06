@@ -69,7 +69,20 @@ def get_ospool_resources_report_json():
     return project_names
 
 
+def verify_ospool_projects(new_projects):
+    current_projects = None
+    with open(f"{DATA_DIRECTORY}/ospool_projects.json", "r") as fp:
+        current_projects = json.load(fp)
+
+    current_projects = set(current_projects)
+    new_projects = set(new_projects)
+
+    return new_projects.issuperset(current_projects)
+
+
 if __name__ == "__main__":
 
     ospool_projects = get_ospool_resources_report_json()
-    write_document_to_file(ospool_projects, DATA_DIRECTORY, f"ospool_projects.json", True)
+
+    if verify_ospool_projects(ospool_projects):
+        write_document_to_file(ospool_projects, DATA_DIRECTORY, f"ospool_projects.json", True)
