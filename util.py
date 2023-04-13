@@ -15,3 +15,4 @@ def write_document_to_file(
     if overwrite or not os.path.isfile(output_path):
         with open(output_path, "w") as fp:
             json.dump(document, fp)
+
