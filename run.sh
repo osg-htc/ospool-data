@@ -22,7 +22,7 @@ if [ $returnValue -ne 0 ]
 then
   git fetch --all
   git merge origin/master
-  git add .
+  find data -name '*.json' | xargs git add
   git commit -m "Update Data"
   git push https://CannonLock:$GH_TOKEN@github.com/osg-htc/ospool-data.git
 fi
