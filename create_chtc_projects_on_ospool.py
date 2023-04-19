@@ -5,7 +5,7 @@ import json
 
 from util import write_document_to_file
 
-SUMMARY_INDEX = "osg-schedd-*"
+SUMMARY_INDEX = "chtc-schedd-*"
 ENDPOINT = "http://localhost:9200"
 DATA_DIRECTORY = "data"
 
