@@ -9,6 +9,7 @@ set +a
 source venv/bin/activate
 pip3 install -r requirements.txt &> /dev/null 2>&1
 
+python3 create_chtc_projects_on_ospool.py
 python3 create_daily_ospool_report_json.py
 python3 create_active_facilities_report_json.py
 python3 create_ospool_projects_report_json.py
