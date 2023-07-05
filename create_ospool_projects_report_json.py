@@ -72,6 +72,9 @@ def verify_ospool_projects(new_projects):
     current_projects = set(current_projects)
     new_projects = set(new_projects)
 
+    if not new_projects.issuperset(current_projects):
+        print(f"Projects Missing in New Projects{current_projects.difference(new_projects)}")
+
     return new_projects.issuperset(current_projects)
 
 
