@@ -9,10 +9,19 @@ set +a
 source venv/bin/activate
 pip3 install -r requirements.txt &> /dev/null 2>&1
 
+printf "----------------------------------------------------------\nRunning create_chtc_projects_on_ospool"
 python3 create_chtc_projects_on_ospool.py
+
+printf "----------------------------------------------------------\nRunning create_daily_ospool_report_json"
 python3 create_daily_ospool_report_json.py
+
+printf "----------------------------------------------------------\nRunning create_active_facilities_report_json"
 python3 create_active_facilities_report_json.py
+
+printf "----------------------------------------------------------\nRunning create_ospool_projects_report_json"
 python3 create_ospool_projects_report_json.py
+
+printf "----------------------------------------------------------\nRunning create_ospool_resources_report_json"
 python3 create_ospool_resources_report_json.py
 
 # Check that data was added since the last run
