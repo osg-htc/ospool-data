@@ -42,6 +42,11 @@ def get_ospool_resources_report_json():
                             "ScheddName.keyword": [
                                 "login04.osgconnect.net",
                                 "login05.osgconnect.net",
+                                "ap20.uc.osg-htc.org",
+                                "ap21.uc.osg-htc.org",
+                                "ap22.uc.osg-htc.org",
+                                "ap23.uc.osg-htc.org",
+                                "ap40.uw.osg-htc.org"
                             ]
                         }
                     },
