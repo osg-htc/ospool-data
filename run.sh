@@ -13,6 +13,7 @@ python3 create_chtc_projects_on_ospool.py
 python3 create_daily_ospool_report_json.py
 python3 create_active_facilities_report_json.py
 python3 create_ospool_projects_report_json.py
+python3 create_ospool_resources_report_json.py
 
 # Check that data was added since the last run
 git diff-index --quiet HEAD
