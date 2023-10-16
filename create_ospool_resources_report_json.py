@@ -5,9 +5,9 @@ import json
 import datetime
 import os
 from verification import verify_latest_report
-from util import write_document_to_file
+from util import write_document_to_file, get_ospool_aps, OSPOOL_COLLECTORS, OSPOOL_NON_FAIRSHARE_RESOURCES
 
-DATA_DIRECTORY = "data"
+DATA_DIRECTORY = "data/ospool_resources_report"
 SUMMARY_INDEX = "osg-schedd-*"
 ENDPOINT = "http://localhost:9200"
 
@@ -16,11 +16,31 @@ def get_ospool_resources_report_json():
 
     query = {
         "size": 1000,
+        "runtime_mappings": {
+            "ResourceName": {
+                "type": "keyword",
+                "script": {
+                    "language": "painless",
+                    "source": """
+                    String res;
+                    if (doc.containsKey("MachineAttrGLIDEIN_ResourceName0") && doc["MachineAttrGLIDEIN_ResourceName0.keyword"].size() > 0) {
+                        res = doc["MachineAttrGLIDEIN_ResourceName0.keyword"].value;
+                    } else if (doc.containsKey("MATCH_EXP_JOBGLIDEIN_ResourceName") && doc["MATCH_EXP_JOBGLIDEIN_ResourceName.keyword"].size() > 0) {
+                        res = doc["MATCH_EXP_JOBGLIDEIN_ResourceName.keyword"].value;
+                    } else {
+                        res = "UNKNOWN";
+                    }
+                    emit(res);
+                    """,
+                }
+            }
+        },
         "aggs": {
-            "projects": {
+            "resources": {
                 "terms": {
-                    "field": "ProjectName.keyword",
-                    "size": 1000,
+                    "field": "ResourceName",
+                    "missing": "UNKNOWN",
+                    "size": 1024
                 }
             }
         },
@@ -32,29 +52,37 @@ def get_ospool_resources_report_json():
                             "JobUniverse": 5,
                         }
                     },
+                ],
+                "minimum_should_match": 1,
+                "should": [
                     {
-                        "term": {
-                            "JobStatus": 4,
+                        "bool": {
+                            "filter": [
+                                {
+                                    "terms": {
+                                        "ScheddName.keyword": list(get_ospool_aps())
+                                    }
+                                },
+                            ],
+                            "must_not": [
+                                {
+                                    "exists": {
+                                        "field": "LastRemotePool",
+                                    }
+                                },
+                            ],
                         }
                     },
                     {
                         "terms": {
-                            "ScheddName.keyword": [
-                                "login04.osgconnect.net",
-                                "login05.osgconnect.net",
-                                "ap20.uc.osg-htc.org",
-                                "ap21.uc.osg-htc.org",
-                                "ap22.uc.osg-htc.org",
-                                "ap23.uc.osg-htc.org",
-                                "ap40.uw.osg-htc.org"
-                            ]
+                            "LastRemotePool.keyword": list(OSPOOL_COLLECTORS)
                         }
                     },
                 ],
                 "must_not": [
                     {
-                        "exists": {
-                            "field": "LastRemotePool",
+                        "terms": {
+                            "ResourceName": list(OSPOOL_NON_FAIRSHARE_RESOURCES)
                         }
                     },
                 ],
@@ -77,4 +105,4 @@ def get_ospool_resources_report_json():
 if __name__ == "__main__":
 
     active_ospool_resources = get_ospool_resources_report_json()
-    write_document_to_file(active_ospool_resources, DATA_DIRECTORY, f"ospool_projects.json", True)
+    write_document_to_file(active_ospool_resources, DATA_DIRECTORY, f"ospool_resources.json", True)
