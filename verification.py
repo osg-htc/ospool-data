@@ -7,7 +7,8 @@ def get_daily_reports():
     """Get all daily reports"""
 
     daily_reports = []
-    for file_path in glob.glob("data/daily_reports/2*.json"):  # Should have us covered for a millennium
+    file_names = reversed(sorted(glob.glob("data/daily_reports/2*.json")))
+    for file_path in file_names:  # Should have us covered for a millennium
         with open(file_path, "r") as fp:
             daily_reports.append(json.load(fp))
 
@@ -44,7 +45,7 @@ def verify_latest_report(invalid_outliers: set, expected_keys: list):
 
     daily_report_df = get_daily_reports()
 
-    past_reports_df = daily_report_df.iloc[1:, :]
+    past_reports_df = daily_report_df.iloc[1:365, :]
     latest_report_df = daily_report_df.iloc[0:1, :]
 
     if not all(key in latest_report_df.columns for key in expected_keys):
