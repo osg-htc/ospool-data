@@ -97,12 +97,30 @@ def get_ospool_resources_report_json():
         headers={'Content-Type': 'application/json'}
     )
     response_json = response.json()
-    project_names = [i['key'] for i in response_json['aggregations']['resources']['buckets']]
+    resource_names = [i['key'] for i in response_json['aggregations']['resources']['buckets']]
 
-    return project_names
+    return resource_names
+
+def verify_ospool_resources(new_resources):
+    with open(f"{DATA_DIRECTORY}/data/ospool_resources_report/ospool_resources.json", "r") as fp:
+        current_resources = json.load(fp)
+
+    current_resources = set(current_resources)
+    new_resources = set(new_resources)
+
+    if not new_resources.issuperset(current_resources):
+        print(f"resources Missing in New resources{current_resources.difference(new_resources)}")
+
+    return new_resources.issuperset(current_resources)
 
 
 if __name__ == "__main__":
 
     active_ospool_resources = get_ospool_resources_report_json()
-    write_document_to_file(active_ospool_resources, DATA_DIRECTORY, f"ospool_resources.json", True)
+
+    if verify_ospool_resources(active_ospool_resources):
+        clean_resources = sorted(set(active_ospool_resources))
+        write_document_to_file(clean_resources, DATA_DIRECTORY, f"ospool_resources.json", True)
+
+    else:
+        print("New resources are not a superset of the previous resources!")
