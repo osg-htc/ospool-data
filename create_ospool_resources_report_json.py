@@ -102,7 +102,7 @@ def get_ospool_resources_report_json():
     return resource_names
 
 def verify_ospool_resources(new_resources):
-    with open(f"{DATA_DIRECTORY}/data/ospool_resources_report/ospool_resources.json", "r") as fp:
+    with open(f"{DATA_DIRECTORY}/ospool_resources.json", "r") as fp:
         current_resources = json.load(fp)
 
     current_resources = set(current_resources)
