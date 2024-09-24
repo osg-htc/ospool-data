@@ -24,7 +24,7 @@ def get_chtc_projects_on_ospool():
         "query": {
             "bool": {
                 "filter": [{
-                    "terms": {"LastRemotePool.keyword": ['cm-2.ospool.osg-htc.org', "cm-2.ospool.osg-htc.org"]},
+                    "terms": {"LastRemotePool.keyword": ['cm-1.ospool.osg-htc.org', "cm-2.ospool.osg-htc.org", "flock.opensciencegrid.org"]},
                 }],
             }
         }
@@ -38,12 +38,12 @@ def get_chtc_projects_on_ospool():
     )
     response_json = response.json()
 
-    active_facilities = [v['key'] for v in response_json['aggregations']['projects']['buckets']]
+    chtc_projects_on_ospool = [v['key'] for v in response_json['aggregations']['projects']['buckets']]
 
-    return active_facilities
+    return chtc_projects_on_ospool
 
 if __name__ == "__main__":
 
-    active_facilities = get_chtc_projects_on_ospool()
+    chtc_projects_on_ospool = get_chtc_projects_on_ospool()
 
-    write_document_to_file(active_facilities, DATA_DIRECTORY, f"chtc_projects_running_on_ospool.json", True)
+    write_document_to_file(chtc_projects_on_ospool, DATA_DIRECTORY, f"chtc_projects_running_on_ospool.json", True)
