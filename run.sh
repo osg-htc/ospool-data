@@ -34,6 +34,6 @@ then
   git fetch --all
   git merge origin/master
   find data -name '*.json' | xargs git add
-  git commit -m "Update Data"
+  git commit --allow-empty -m "Update Data"
   git push https://CannonLock:$GH_TOKEN@github.com/osg-htc/ospool-data.git
 fi
