@@ -1,6 +1,8 @@
 import glob
 import json
 import pandas as pd
+import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
 
 
 def get_daily_reports():
@@ -10,7 +12,13 @@ def get_daily_reports():
     file_names = reversed(sorted(glob.glob("data/daily_reports/2*.json")))
     for file_path in file_names:  # Should have us covered for a millennium
         with open(file_path, "r") as fp:
-            daily_reports.append(json.load(fp))
+
+            json_data = json.load(fp)
+
+            # Convert YYYY-MM-DD to datetime object
+            json_data['date'] = datetime.strptime(json_data['date'], "%Y-%m-%d")
+
+            daily_reports.append(json_data)
 
     return pd.DataFrame(daily_reports).sort_values(by="date", ascending=False)
 
@@ -22,11 +30,18 @@ def check_document_for_outliers(df: pd.DataFrame, document: pd.DataFrame) -> lis
     for column in df.columns:
         try:
             standard_deviation = df[column].std()
-            mean = df[column].mean()
+
+            # Calculate the mean using ewm
+            mean = df[column].ewm(times=df['date'], halflife=timedelta(days=30)).mean().iloc[-1]
+
             latest_value = document[column].values[0]
 
             if mean - standard_deviation*3 > latest_value or latest_value > mean + standard_deviation*3:
                 print(f"{column}: {mean - standard_deviation*3} < {latest_value} > {mean + standard_deviation*3}")
+
+                # Graph out the outlier as a barchart
+                df[column].plot(kind='bar', title=f"{column} Outlier Check")
+                plt.show()
 
                 outlier.append(column)
 
