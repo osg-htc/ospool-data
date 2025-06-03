@@ -40,8 +40,8 @@ def check_document_for_outliers(df: pd.DataFrame, document: pd.DataFrame) -> lis
                 print(f"{column}: {mean - standard_deviation*3} < {latest_value} > {mean + standard_deviation*3}")
 
                 # Graph out the outlier as a barchart
-                df[column].plot(kind='bar', title=f"{column} Outlier Check")
-                plt.show()
+                # df[column].plot(kind='bar', title=f"{column} Outlier Check")
+                # plt.show()
 
                 outlier.append(column)
 
