@@ -2,9 +2,6 @@
 
 import requests
 import json
-import datetime
-import os
-from verification import verify_latest_report
 from util import write_document_to_file, get_ospool_aps, OSPOOL_COLLECTORS, OSPOOL_NON_FAIRSHARE_RESOURCES
 
 DATA_DIRECTORY = "data/ospool_resources_report"

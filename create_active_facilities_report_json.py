@@ -3,8 +3,6 @@
 import requests
 import json
 import datetime
-import os
-from verification import verify_latest_report
 from util import write_document_to_file
 
 DATA_DIRECTORY = "data/active_site_report"
